@@ -1,15 +1,13 @@
 package tasks;
 
-import org.springframework.cglib.core.Local;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
-import static java.lang.System.in;
 
 @RestController
 @RequestMapping("users")
-public class UserController {
+public class UsersController {
 
 
     @PostMapping
@@ -32,7 +30,7 @@ public class UserController {
     }
 
     public record CreateUserOutput(
-            Long id,
+            Long user_id,
             String name,
             String email,
             String password,
@@ -41,13 +39,13 @@ public class UserController {
     ) {
     }
 
-    @GetMapping("{id}")
-    public GetUserByIdOutput getById(@PathVariable Long id) {
+    @GetMapping("{user_id}")
+    public GetUserByIdOutput getById(@PathVariable Long user_id) {
 
         String password = "123456";
         String cryptoPassword = SHA256.execute(password);
         return new GetUserByIdOutput(
-                id,
+                user_id,
                 "John Doe",
                 "john@example.com",
                 cryptoPassword,
@@ -57,7 +55,7 @@ public class UserController {
     }
 
     public record GetUserByIdOutput(
-            Long id,
+            Long user_id,
             String name,
             String email,
             String password,
@@ -66,10 +64,10 @@ public class UserController {
     ) {
     }
 
-    @PutMapping("{id}")
-    public UpdateUserOutput update(@PathVariable Long id, @RequestBody UpdateUserInput in) {
+    @PutMapping("{user_id}")
+    public UpdateUserOutput update(@PathVariable Long user_id, @RequestBody UpdateUserInput in) {
         return new UpdateUserOutput(
-                id,
+                user_id,
                 in.name(),
                 in.email(),
                 LocalDateTime.of(2024, 7, 17, 0, 0, 0),
@@ -84,7 +82,7 @@ public class UserController {
     }
 
     public record UpdateUserOutput(
-            Long id,
+            Long user_id,
             String name,
             String email,
             LocalDateTime created_at,
@@ -92,10 +90,10 @@ public class UserController {
     ) {
     }
 
-    @DeleteMapping("{id}")
-    public UserController.DeleteUserOutput delete(@PathVariable Long id) {
+    @DeleteMapping("{user_id}")
+    public UsersController.DeleteUserOutput delete(@PathVariable Long user_id) {
 
-        return new UserController.DeleteUserOutput(
+        return new UsersController.DeleteUserOutput(
                 "User deleted successfully"
         );
 
