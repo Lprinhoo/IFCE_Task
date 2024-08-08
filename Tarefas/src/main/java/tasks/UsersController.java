@@ -1,5 +1,6 @@
-package tasks;
+package Task;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -9,11 +10,19 @@ import java.time.LocalDateTime;
 @RequestMapping("users")
 public class UsersController {
 
+    private final JdbcTemplate database;
+
+    public UsersController(JdbcTemplate database) {
+        this.database = database;
+    }
 
     @PostMapping
     public CreateUserOutput post(@RequestBody CreateUserInput in) {
+
+        final var user_id = database.update("INSERT INTO users(name, email, password) VALUES (?,?,?)", in.name(), in.email(), SHA256.execute(in.password()));
+
         return new CreateUserOutput(
-                1L,
+                user_id,
                 in.name(),
                 in.email(),
                 SHA256.execute(in.password()),
@@ -30,7 +39,7 @@ public class UsersController {
     }
 
     public record CreateUserOutput(
-            Long user_id,
+            Integer user_id,
             String name,
             String email,
             String password,
